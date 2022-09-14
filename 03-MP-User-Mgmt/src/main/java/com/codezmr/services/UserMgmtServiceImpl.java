@@ -143,7 +143,7 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 		entity.setPassword(login.getPassword());
 
 		Example<UserMaster> of = Example.of(entity);
-		List<UserMaster> findAll = userMasterRepo.findAll();
+		List<UserMaster> findAll = userMasterRepo.findAll(of);
 
 		if (findAll.isEmpty()) {
 			return "Invalid Credentials";
@@ -160,6 +160,16 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 	@Override
 	public String forgetPwd(String email) {
+		
+		UserMaster entity = userMasterRepo.findByEmail(email);
+		
+		if(entity == null) {
+			
+			return "Invalid Email";
+		}
+		
+		//TODO: Send password to user mail.
+		
 		return null;
 	}
 

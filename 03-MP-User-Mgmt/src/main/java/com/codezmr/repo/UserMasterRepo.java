@@ -6,4 +6,6 @@ import com.codezmr.entity.UserMaster;
 
 public interface UserMasterRepo extends JpaRepository<UserMaster, Integer>{
 
+	
+	public UserMaster findByEmail(String email);
 }
