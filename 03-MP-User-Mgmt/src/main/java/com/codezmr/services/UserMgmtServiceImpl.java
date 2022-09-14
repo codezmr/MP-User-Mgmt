@@ -109,17 +109,38 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 	@Override
 	public boolean deleteUserById(Integer userId) {
+		try {
+			userMasterRepo.deleteById(userId);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+
 		return false;
 	}
 
 	@Override
 	public boolean changeAccountStatus(Integer userId, String accStatus) {
+
+		Optional<UserMaster> findById = userMasterRepo.findById(userId);
+
+		if (findById.isPresent()) {
+			UserMaster userMaster = findById.get();
+			userMaster.setAccStatus(accStatus);
+			userMasterRepo.save(userMaster);
+			return true;
+		}
+
 		return false;
 	}
 
 	@Override
 	public String login(Login login) {
 		return null;
+
+	
+
 	}
 
 	@Override
