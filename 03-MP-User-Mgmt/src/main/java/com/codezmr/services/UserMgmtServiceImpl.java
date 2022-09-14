@@ -137,9 +137,24 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 	@Override
 	public String login(Login login) {
-		return null;
 
-	
+		UserMaster entity = new UserMaster();
+		entity.setEmail(login.getEmail());
+		entity.setPassword(login.getPassword());
+
+		Example<UserMaster> of = Example.of(entity);
+		List<UserMaster> findAll = userMasterRepo.findAll();
+
+		if (findAll.isEmpty()) {
+			return "Invalid Credentials";
+		} else {
+			UserMaster userMaster = findAll.get(0);
+			if (userMaster.getAccStatus().equals("Active")) {
+				return "SUCCESS";
+			} else {
+				return "Account not activated";
+			}
+		}
 
 	}
 
