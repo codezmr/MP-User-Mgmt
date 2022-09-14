@@ -1,9 +1,12 @@
 package com.codezmr.services;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 
 import com.codezmr.bindings.ActivateAccount;
 import com.codezmr.bindings.Login;
@@ -28,7 +31,7 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 		UserMaster isSaved = userMasterRepo.save(entity);
 
 		// TODO: Send Registration Email.
-		
+
 		return isSaved.getUserId() != null;
 	}
 
@@ -49,20 +52,59 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 	@Override
 	public boolean activateUserAcc(ActivateAccount activateAccount) {
-		
-		
-		
-		return false;
+
+		UserMaster entity = new UserMaster();
+		entity.setEmail(activateAccount.getEmail());
+		entity.setPassword(activateAccount.getTempPwd());
+
+		// SELECT * FROM USER_MASTER WHERE email=? AND password=?;
+		Example<UserMaster> of = Example.of(entity);
+
+		List<UserMaster> findAll = userMasterRepo.findAll(of);
+
+		if (findAll.isEmpty()) {
+			return false;
+		} else {
+			UserMaster userMaster = findAll.get(0);
+			userMaster.setPassword(activateAccount.getNewPwd());
+			userMaster.setAccStatus("Active");
+			userMasterRepo.save(userMaster);
+			return true;
+		}
+
 	}
 
 	@Override
 	public List<User> getAllUsers() {
-		return null;
+
+		List<UserMaster> findAll = userMasterRepo.findAll();
+
+		List<User> users = new ArrayList<>();
+
+		for (UserMaster entity : findAll) {
+
+			User user = new User();
+			BeanUtils.copyProperties(entity, user);
+			users.add(user);
+		}
+
+		return users;
 	}
 
 	@Override
 	public User getUserById(Integer userId) {
+
+		Optional<UserMaster> findById = userMasterRepo.findById(userId);
+
+		if (findById.isPresent()) {
+			User user = new User();
+			UserMaster userMaster = findById.get();
+
+			BeanUtils.copyProperties(userMaster, user);
+			return user;
+		}
 		return null;
+
 	}
 
 	@Override
