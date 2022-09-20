@@ -1,0 +1,12 @@
+spring:
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
+    host: smtp.gmail.com
+    username: testapi.from.mail@gmail.com
+    password: qktashybwbkmifwk
+    port: '587'
