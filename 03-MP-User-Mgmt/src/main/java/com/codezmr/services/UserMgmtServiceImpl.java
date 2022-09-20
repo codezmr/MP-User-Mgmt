@@ -1,5 +1,9 @@
 package com.codezmr.services;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,11 +17,15 @@ import com.codezmr.bindings.Login;
 import com.codezmr.bindings.User;
 import com.codezmr.entity.UserMaster;
 import com.codezmr.repo.UserMasterRepo;
+import com.codezmr.utils.EmailUtils;
 
 public class UserMgmtServiceImpl implements UserMgmtService {
 
 	@Autowired
 	private UserMasterRepo userMasterRepo;
+
+	@Autowired
+	EmailUtils emailUtils;
 
 	@Override
 	public boolean saveUser(User user) {
@@ -30,7 +38,10 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 		UserMaster isSaved = userMasterRepo.save(entity);
 
-		// TODO: Send Registration Email.
+		// Send Registration Email.
+		String subject = "Your Registrtion is Success.";
+		String body = readRegEmailBody(entity.getFullName(), entity.getPassword());
+		emailUtils.sendEmail(user.getEmail(), subject, body);
 
 		return isSaved.getUserId() != null;
 	}
@@ -47,6 +58,41 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 		}
 		return tempPasswd;
+
+	}
+
+	private String readRegEmailBody(String fullName, String tepPasswd) {
+
+		String fileName = "REG_EMAIL_BODY.txt";
+		String url = "https://www.google.com";
+
+		FileReader fr;
+
+		String mailBody = null;
+		try {
+			fr = new FileReader(fileName);
+			BufferedReader br = new BufferedReader(fr);
+
+			StringBuffer buffer = new StringBuffer();
+			String line = br.readLine();
+
+			while (line != null) {
+
+				buffer.append(line);
+				line = br.readLine();
+			}
+			br.close();
+
+			mailBody = buffer.toString();
+			mailBody = mailBody.replace("{Fullname}", fullName);
+			mailBody = mailBody.replace("{TempPwd}", tepPasswd);
+			mailBody = mailBody.replace("{URL}", url);
+
+			return mailBody;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mailBody;
 
 	}
 
@@ -160,16 +206,16 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 	@Override
 	public String forgetPwd(String email) {
-		
+
 		UserMaster entity = userMasterRepo.findByEmail(email);
-		
-		if(entity == null) {
-			
+
+		if (entity == null) {
+
 			return "Invalid Email";
 		}
-		
-		//TODO: Send password to user mail.
-		
+
+		// TODO: Send password to user mail.
+
 		return null;
 	}
 
