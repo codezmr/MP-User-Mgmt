@@ -40,10 +40,39 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 		// Send Registration Email.
 		String subject = "Your Registrtion is Success.";
-		String body = readRegEmailBody(entity.getFullName(), entity.getPassword());
+		String fileName = "REG_EMAIL_BODY.txt";
+
+		String body = readEmailBody(entity.getFullName(), entity.getPassword(), fileName);
 		emailUtils.sendEmail(user.getEmail(), subject, body);
 
 		return isSaved.getUserId() != null;
+	}
+	
+	@Override
+	public String forgetPwd(String email) {
+
+		UserMaster entity = userMasterRepo.findByEmail(email);
+
+		if (entity == null) {
+
+			return "Invalid Email";
+		}
+
+		// Send password to user mail.
+
+		String forgetPwdBody = "RECOVER_PWD_BODY.txt";
+		
+		String subject = "Get Your Forgot Password .";
+		String fileName= "RECOVER_PWD_BODY.txt";
+		
+		String body = readEmailBody(entity.getFullName(), entity.getPassword(), fileName);
+		boolean isSendEmail = emailUtils.sendEmail(email, subject, body);
+		
+		if(isSendEmail) {
+			return "Password sent to your register email: "+email;
+		}
+
+		return null;
 	}
 
 	private String tempPassGenrator() {
@@ -61,10 +90,10 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 	}
 
-	private String readRegEmailBody(String fullName, String tepPasswd) {
+	private String readEmailBody(String fullName, String pwd, String fileName) {
 
-		String fileName = "REG_EMAIL_BODY.txt";
 		String url = "https://www.google.com";
+		String loginUrl = "https://www.google.com";
 
 		FileReader fr;
 
@@ -85,8 +114,12 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 			mailBody = buffer.toString();
 			mailBody = mailBody.replace("{Fullname}", fullName);
-			mailBody = mailBody.replace("{TempPwd}", tepPasswd);
+			mailBody = mailBody.replace("{TempPwd}", pwd);
 			mailBody = mailBody.replace("{URL}", url);
+
+			// forget password file
+			mailBody = mailBody.replace("{LoginURL}", loginUrl);
+			mailBody = mailBody.replace("{UserPwd}", pwd);
 
 			return mailBody;
 		} catch (Exception e) {
@@ -204,19 +237,6 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 	}
 
-	@Override
-	public String forgetPwd(String email) {
 
-		UserMaster entity = userMasterRepo.findByEmail(email);
-
-		if (entity == null) {
-
-			return "Invalid Email";
-		}
-
-		// TODO: Send password to user mail.
-
-		return null;
-	}
 
 }

@@ -1,0 +1,10 @@
+<h1>Hi {Fullname},</h1><br/><br/>
+
+Please find your password below<br/>
+
+<b>Password:</b> {UserPwd}<br/><br/>
+
+<a href="{LoginURL}"> Click Here To Login In Your Account</a><br/><br/>
+
+Thanks, <br/>
+Admin team.
