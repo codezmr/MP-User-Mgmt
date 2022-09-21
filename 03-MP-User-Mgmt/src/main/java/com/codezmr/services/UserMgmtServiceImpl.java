@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.stereotype.Service;
 
 import com.codezmr.bindings.ActivateAccount;
 import com.codezmr.bindings.Login;
@@ -19,6 +20,7 @@ import com.codezmr.entity.UserMaster;
 import com.codezmr.repo.UserMasterRepo;
 import com.codezmr.utils.EmailUtils;
 
+@Service
 public class UserMgmtServiceImpl implements UserMgmtService {
 
 	@Autowired
