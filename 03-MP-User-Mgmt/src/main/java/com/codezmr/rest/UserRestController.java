@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codezmr.bindings.ActivateAccount;
+import com.codezmr.bindings.Login;
 import com.codezmr.bindings.User;
 import com.codezmr.services.UserMgmtService;
 
@@ -100,6 +101,14 @@ public class UserRestController {
 			return new ResponseEntity<String>(failureMsg, HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
+	}
+
+	@GetMapping("/login")
+	public ResponseEntity<String> login(@RequestBody Login login) {
+
+		String status = service.login(login);
+		return new ResponseEntity<String>(status, HttpStatus.OK);
+
 	}
 
 }
