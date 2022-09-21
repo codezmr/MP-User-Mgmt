@@ -62,20 +62,20 @@ public class UserRestController {
 		return new ResponseEntity<List<User>>(allUsers, HttpStatus.OK);
 
 	}
-	
+
 	@GetMapping("/user/{userId}")
-	public ResponseEntity<User> getUserById(@PathVariable Integer userId){
-		
+	public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
+
 		User user = service.getUserById(userId);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
-		
+
 	}
-	
+
 	@DeleteMapping("/user/{userId}")
-	public ResponseEntity<String> deleteUserById(@PathVariable Integer userId){
-		
+	public ResponseEntity<String> deleteUserById(@PathVariable Integer userId) {
+
 		boolean isDeleted = service.deleteUserById(userId);
-		
+
 		if (isDeleted) {
 			String successMsg = "User Account Deleted Success.";
 			return new ResponseEntity<String>(successMsg, HttpStatus.OK);
@@ -84,8 +84,22 @@ public class UserRestController {
 			return new ResponseEntity<String>(failureMsg, HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
-		
+
 	}
-	
-	
+
+	@GetMapping("/user/{userId}/{status}")
+	public ResponseEntity<String> statusChange(@PathVariable Integer userId, @PathVariable String status) {
+
+		boolean isStatusChnaged = service.changeAccountStatus(userId, status);
+
+		if (isStatusChnaged) {
+			String successMsg = "User Status Changed Success.";
+			return new ResponseEntity<String>(successMsg, HttpStatus.OK);
+		} else {
+			String failureMsg = "Oops!! Status Changing Failed.";
+			return new ResponseEntity<String>(failureMsg, HttpStatus.INTERNAL_SERVER_ERROR);
+
+		}
+	}
+
 }
