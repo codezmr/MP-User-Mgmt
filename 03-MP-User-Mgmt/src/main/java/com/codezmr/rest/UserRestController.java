@@ -110,5 +110,28 @@ public class UserRestController {
 		return new ResponseEntity<String>(status, HttpStatus.OK);
 
 	}
+	
+	@GetMapping("/forget/{emailId}")
+	public ResponseEntity<String> forgetPassword(@PathVariable String emailId){
+		
+		String status = service.forgetPwd(emailId);
+		
+		return new ResponseEntity<String>(status, HttpStatus.OK);
 
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
