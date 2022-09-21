@@ -103,7 +103,7 @@ public class UserRestController {
 		}
 	}
 
-	@GetMapping("/login")
+	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody Login login) {
 
 		String status = service.login(login);
