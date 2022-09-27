@@ -8,4 +8,5 @@ public interface UserMasterRepo extends JpaRepository<UserMaster, Integer>{
 
 	
 	public UserMaster findByEmail(String email);
+	public UserMaster findByPassword(String password);
 }
